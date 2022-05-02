@@ -94,7 +94,7 @@ const displayMovements = function (movements, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}€</div>
+        <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
 
@@ -104,19 +104,19 @@ const displayMovements = function (movements, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -126,7 +126,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 const createUsernames = function (accs) {
@@ -206,7 +206,9 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(
+    inputLoanAmount.value
+  ); /*Math.floor() does type coercion so we don't need NUMBER */
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
@@ -251,3 +253,133 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+
+/* 172 The Remainder Operator */
+
+console.log(5 % 2);
+console.log(5 / 2); /* 5  = 2 * 2  + 1 <- remainder */
+
+console.log(8 % 3); /* 8 = 2 * 3  + 2 <- remainder */
+console.log(8 / 3); /* 8 = 2 * 3  + 2 <- remainder */
+
+console.log(6 % 2);
+console.log(6 / 2);
+
+console.log(7 % 2);
+console.log(7 / 2);
+
+/* Is it an even number arrow function. Whenever the results of the remainder operator is zero, then that means that the first number is completely divisible by the second one. */
+const isEven = n => n % 2 === 0;
+console.log(isEven(8));
+console.log(isEven(23));
+console.log(isEven(514));
+
+labelBalance.addEventListener('click', function () {
+  [...document.querySelectorAll('.movements_row')].forEach(function (row, i) {
+    if (i % 2 === 0) row.style.background = 'orangered';
+  });
+});
+
+/* 171 Math and Rounding */
+
+// console.log(Math.sqrt(25));
+// console.log(25 ** (1 / 2));
+// console.log(8 ** (1 / 3));
+
+// console.log(Math.max(5, 18, 23, 11, 2));
+// console.log(
+//   Math.max(5, 18, '23', 11, 2)
+// ); /* It also performs type coercion so it recognizes '23' as 23. */
+// console.log(Math.max(5, 18, '23px', 11, 2)); /* Parsing does not work. */
+
+// /* And so for example, if we wanted to calculate the radius of a circle with 10 pixels, we could do that.
+
+// So for that, we use Math.PI. Let's say that we get 10 pixels from the user interface. So we can say parseFloat of 10 pixels (since Number.parseFloat() pulls the Integer & decimal from the string), and then we simply square this value. This is how we calculate the area of a circle with this radius. */
+// console.log(Math.PI); /* Pi's constant */
+// console.log(Math.PI * Number.parseFloat('10px') ** 2);
+
+// /* Remember, so that we did by Math.random. And so this will give us a number between zero and one. So as I reload, you see, I get different values. Then we multiply this by a six. */
+
+// console.log(Math.trunc(Math.random() * 6 + 1));
+
+// /* Math.random generates a number between 0 and less than 1. 1 is not inclusive so that's why this works.*/
+// const randomInt = (min, max) => Math.floor(Math.rondom * (max - min) + 1) + min;
+// console.log(randomInt(10, 20));
+
+// /* Rounding Integers - all these methods also perform type coercion */
+// console.log(Math.trunc(23.3));
+
+// console.log(Math.round(23.3));
+// console.log(Math.round(23.9));
+
+// console.log(Math.ceil(23.3));
+// console.log(Math.ceil(23.9));
+
+// console.log(Math.floor(23.3));
+// console.log(Math.floor(23.9));
+
+// console.log(Math.floor('23.9'));
+
+// /* So basically floor and trunc, both cut off the decimal part when we are dealing with POSITIVE numbers. And so actually Math.floor() is a little bit better than Math.trunc() because it works in all situations, no matter if we're dealing with positive or negative numbers. The function we created (randomInt was updated with floor() from trunc().)*/
+
+// console.log(Math.trunc(-23.3));
+// console.log(Math.floor(-23.3));
+
+// /* Rounding decimals (floating point numnbers) */
+
+// console.log(
+//   (2.7).toFixed(0)
+// ); /* This will always return a string a not a number.
+
+// So this is a number, so it's a primitive, right? And primitives actually don't have methods. And so behind the scenes, JavaScript will do boxing. And boxing is to basically transform this to a number object, then call the method on that object. And then once the operation is finished it will convert it back to a primitive, okay? */
+
+// console.log((2.7).toFixed(3));
+// console.log((2.345).toFixed(2));
+// console.log(
+//   +(2.345).toFixed(2)
+// ); /* The plus sign performs type coercion thus changing it from a string to a number */
+
+/* 170 Converting and Checking Numbers */
+
+// /* All numbers are presented internally as floating point numbers so basically decimals, no matter if we actually write them as integers or as decimals. The result for this is TRUE. Also, numbers are represented internally in a 64 base 2 format.*/
+// console.log(23 === 23.0);
+
+// /* There are certain numbers that are difficult to represent in base 2 and one example is the fraction 1/10 = .1 */
+// console.log(0.1 + 0.2);
+// console.log(0.1 + 0.2 === 0.3);
+
+// console.log(Number('23'));
+// /* This works because when JavaScript sees the plus operator, it will do type coercion and it will automatically convert all the operands to numbers. */
+// console.log(+'23');
+
+// /* Parsing - So we can parse a number from a string. So on the Number object, which is kind of this function here, it's also an object in the end.*/
+// console.log(Number.parseInt('30px'));
+// /* The string needs to start with a number */
+// console.log(Number.parseInt('e23'));
+// /* Now, the parseInt function actually accepts a second argument, which is the so-called regex. In this instance, it is BASE 10. By specifying the BASE#, we can avoid some bugs. */
+// console.log(Number.parseInt('30px', 10));
+// console.log(Number.parseInt('11111111', 2));
+// console.log(Number.parseInt('11111111', 10));
+
+// /* Parse Float - Now it reads the decimal number here from our string.*/
+// console.log(Number.parseFloat('2.5rem'));
+// /* The integer only gets displayed and not the decimal portion of the number */
+// console.log(Number.parseInt('2.5rem'));
+
+// /*  This is the more traditional and old-school way of doing it however in modern JavaScript, it is more encouraged to call these functions actually on the Number object. So we say that Number here provides something called a namespace. */
+// console.log(parseFloat('2.5rem'));
+// console.log(parseInt('2.5rem'));
+
+// /* And we can use this one to basically check if any value is a number. Well, not any value but more about that later. */
+// console.log(Number.isNaN(20));
+// console.log(Number.isNaN('20'));
+// /* Let's try converting something. So for example, if we try to convert this string into a number, then this will be NaN. Right? And so therefore, it is true. */
+// console.log(Number.isNaN(+'20X'));
+// /* And so this is not a number is actually not a perfect way for checking if a value is a number because it doesn't consider this use case and sometimes, this might very well happen. */
+// console.log(Number.isNaN(23 / 0)); /* The result is INFINITY */
+
+// /* Number.IsFinite() And so this is actually better to check if something is a number or not. And so this method is the ultimate method that you should use to check if any value is a number, at least when you're working with floating point numbers.*/
+// console.log(Number.isFinite(20)); /* TRUE */
+// console.log(Number.isFinite('20')); /* FALSE */
+// console.log(Number.isFinite(+'20x')); /* FALSE */
+// console.log(Number.isFinite(23 / 0)); /* FALSE */
