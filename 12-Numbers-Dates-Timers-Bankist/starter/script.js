@@ -256,6 +256,30 @@ btnSort.addEventListener('click', function (e) {
 
 /* 172 The Remainder Operator */
 
+console.log(5 % 2);
+console.log(5 / 2); /* 5  = 2 * 2  + 1 <- remainder */
+
+console.log(8 % 3); /* 8 = 2 * 3  + 2 <- remainder */
+console.log(8 / 3); /* 8 = 2 * 3  + 2 <- remainder */
+
+console.log(6 % 2);
+console.log(6 / 2);
+
+console.log(7 % 2);
+console.log(7 / 2);
+
+/* Is it an even number arrow function. Whenever the results of the remainder operator is zero, then that means that the first number is completely divisible by the second one. */
+const isEven = n => n % 2 === 0;
+console.log(isEven(8));
+console.log(isEven(23));
+console.log(isEven(514));
+
+labelBalance.addEventListener('click', function () {
+  [...document.querySelectorAll('.movements_row')].forEach(function (row, i) {
+    if (i % 2 === 0) row.style.background = 'orangered';
+  });
+});
+
 /* 171 Math and Rounding */
 
 // console.log(Math.sqrt(25));
